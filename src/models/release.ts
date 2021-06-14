@@ -15,7 +15,6 @@ export class Release extends SignedBlock {
     magnet?: string
     torrent?: Buffer
 
-
     protected serializeContent():Buffer {
         return serialize({
             name: this.name,

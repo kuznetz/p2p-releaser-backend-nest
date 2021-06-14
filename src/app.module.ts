@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { InnerReleasesController } from './controllers/inner/releases';
 import { Owner } from './services/owner';
 import { Infoblocks } from './services/infoblocks';
 import { Releases } from './services/releases';
 
 @Module({
   imports: [],
-  controllers: [AppController],
+  controllers: [InnerReleasesController],
   providers: [Owner,Infoblocks,Releases],
 })
 export class AppModule {}
