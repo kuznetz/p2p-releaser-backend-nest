@@ -1,43 +1,34 @@
-import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Query, Body, HttpCode } from '@nestjs/common';
 import { Release } from 'src/models/release';
 import { Owner } from 'src/services/owner';
 import { Releases } from '../../services/releases';
 import { Infoblocks } from '../../services/infoblocks';
 
-import { ApiProperty, ApiOperation } from '@nestjs/swagger';
+import { ApiProperty, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { Binary } from 'bson';
 
 class IRelease {
-  @ApiProperty()
   name: string
-  @ApiProperty()
   description?: string
-  @ApiProperty()
   tags?: string[]
 }
 
 class IReleaseFull extends IRelease {
-  @ApiProperty()
   id: string
-  @ApiProperty()
   authorId: string
 }
 
 class TagResponse {
-  @ApiProperty()
+  /** Внутренний ID */
   id: string
-  @ApiProperty()
+  /** Внутренний ID предка */
   parentId?: string
-  @ApiProperty()
+  /** Имя тега */
   name: string
-  @ApiProperty()
-  count: number
 }
 
 class ListParams {
-  @ApiProperty({ required: false })
   authorId?: string
-  @ApiProperty({ required: false })
   tag?: string
 }
 
@@ -47,6 +38,7 @@ export class InnerReleasesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Получить инфоблок в виде json по id' })
+  @ApiOkResponse({ type: IReleaseFull })
   async getById(@Param('id') id: string): Promise<IReleaseFull> {
     let buf = await this.infoblocks.get('releases',Buffer.from(id,'hex'))
     let release = new Release()
@@ -62,6 +54,7 @@ export class InnerReleasesController {
 
   @Post('create')
   @ApiOperation({ summary: 'Создать новый блок из json' })
+  @ApiOkResponse({ type: String })
   async create(@Body() newReleaseParams: IRelease): Promise<string> {
     let newRelease = new Release()
     Object.assign(newRelease,newReleaseParams)
@@ -72,6 +65,7 @@ export class InnerReleasesController {
 
   @Get('tags')
   @ApiOperation({ summary: 'Получить теги релизов' })
+  @ApiOkResponse({ type: TagResponse, isArray: true })
   async getTags(): Promise<TagResponse[]> {
     let tags = await this.releases.getTags()
     return tags.map(t => ({
@@ -84,6 +78,7 @@ export class InnerReleasesController {
 
   @Get('list')
   @ApiOperation({ summary: 'Получить список id по параметрам' })
+  @ApiOkResponse({ type: String, isArray: true })
   async list(@Query() query:ListParams): Promise<string[]> {
     let binAuthor: Buffer
     if (query.authorId) {

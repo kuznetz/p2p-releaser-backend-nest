@@ -54,7 +54,9 @@ export class Releases {
     }
 
     async connect() { //:Promise<void>
-        const client = new MongoClient(Config.mongodb.address);
+        const client = new MongoClient(Config.mongodb.address,{
+            useUnifiedTopology: true
+        });
         await client.connect()
         const db = client.db(Config.mongodb.database)
         this.releases = db.collection('releases')
