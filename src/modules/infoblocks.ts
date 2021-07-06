@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Module, Injectable } from '@nestjs/common'
 import {LevelDown, default as LevelDownConstructor} from 'leveldown'
 import {LevelUp, default as LevelUpConstructor} from 'levelup'
 
@@ -26,3 +26,11 @@ export class Infoblocks {
     }
     
 }
+
+@Module({
+    imports: [],
+    controllers: [],
+    providers: [Infoblocks],
+    exports: [Infoblocks],
+})
+export class InfoblocksModule {}

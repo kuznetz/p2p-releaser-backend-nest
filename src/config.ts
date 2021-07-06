@@ -1,28 +1,16 @@
 import fs from 'fs'
 
-export class ConfigClass {
-
-    static getInstance(): ConfigClass {
-        ConfigClass.instance = ConfigClass.instance || new ConfigClass();
-        return ConfigClass.instance;
+export let Config = {
+    "port": 3000,
+    "mongodb": {
+        "uri": "mongodb://releaser:123@127.0.0.1/releaser",
+        "dbName": "releaser"
     }
-    private static instance: ConfigClass;
-
-    public port: number
-    public mongodb: {
-        address:string,
-        database:string
-    }
-
-    constructor() {
-        if (ConfigClass.instance) {
-            throw new Error("Error - use Singleton.getInstance()");
-        }        
-        let configBuffer = fs.readFileSync('./data/config.json')        
-        Object.assign(this, JSON.parse( configBuffer.toString() ));
-        console.log('Config',this)
-    }
-
 }
 
-export let Config = new ConfigClass()
+export async function LoadConfig():Promise<void> {
+    let configBuffer = await fs.promises.readFile('./data/config.json')
+    //TODO: норм парсер
+    Object.assign(Config, JSON.parse( configBuffer.toString() ));
+    console.log('Config',Config)                        
+}

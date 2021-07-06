@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Module, Injectable } from '@nestjs/common'
 //import NodeRSA from 'node-rsa'
 import crypto from 'crypto'
 import * as fs from 'fs'
 
 @Injectable()
-export class Owner {
+export class Keys {
 
     public privateKey: crypto.KeyObject = null;
     public publicKey: crypto.KeyObject = null;
@@ -55,3 +55,12 @@ export class Owner {
     }
 
 }
+
+
+@Module({
+    imports: [],
+    controllers: [],
+    providers: [Keys],
+    exports: [Keys],
+})
+export class KeysModule {}

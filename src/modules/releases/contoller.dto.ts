@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Param, Query, Body, HttpCode } from '@nestjs/common';
 import { Release } from 'src/models/release';
-import { Owner } from 'src/services/owner';
-import { Releases } from '../../services/releases';
-import { Infoblocks } from '../../services/infoblocks';
+import { Keys } from 'src/modules/keys';
+import { Releases } from './mongo';
+import { Infoblocks } from '../infoblocks';
 
 import { ApiProperty, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { Binary } from 'bson';
@@ -32,9 +32,9 @@ class ListParams {
   tag?: string
 }
 
-@Controller('inner/releases')
-export class InnerReleasesController {
-  constructor(private owner:Owner, private releases:Releases, private infoblocks:Infoblocks) {}
+@Controller('releases')
+export class ReleasesController {
+  constructor(private owner:Keys, private releases:Releases, private infoblocks:Infoblocks) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Получить инфоблок в виде json по id' })

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Infoblocks } from './infoblocks'
+import { Infoblocks } from '../infoblocks'
 import { Release } from 'src/models/release'
 import { Config }  from 'src/config'
 import {MongoClient,Db,Collection,ObjectID,Binary,FilterQuery,Condition} from 'mongodb'
@@ -54,11 +54,11 @@ export class Releases {
     }
 
     async connect() { //:Promise<void>
-        const client = new MongoClient(Config.mongodb.address,{
+        const client = new MongoClient(Config.mongodb.uri,{
             useUnifiedTopology: true
         });
         await client.connect()
-        const db = client.db(Config.mongodb.database)
+        const db = client.db(Config.mongodb.dbName)
         this.releases = db.collection('releases')
         this.tags = db.collection('tags')
     }
